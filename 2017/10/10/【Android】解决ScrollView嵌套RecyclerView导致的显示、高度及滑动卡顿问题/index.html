@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>解决ScrollView嵌套RecyclerView的显示及滑动问题 | YH BLOG</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="YH,G9YH,Java,Android,移动端开发,客户端开发,C#,Unity3D,游戏开发,设计模式" />
+  
+
+  <meta name="description" content="项目中时常需要实现在ScrollView中嵌入一个或多个RecyclerView。这一做法通常会导致如下几个问题  页面滑动卡顿 ScrollView高度显示不正常 RecyclerView内容显示不全  本文将利用多种方式分别解决上述问题 滑动卡顿解决方案若只存在滑动卡顿这一问题，可以采用如下两种简单方式快速解决 利用RecyclerView内部方法12recyclerView.setHasFi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决ScrollView嵌套RecyclerView的显示及滑动问题">
+<meta property="og:url" content="http://yoursite.com/2017/10/10/【Android】解决ScrollView嵌套RecyclerView导致的显示、高度及滑动卡顿问题/index.html">
+<meta property="og:site_name" content="YH BLOG">
+<meta property="og:description" content="项目中时常需要实现在ScrollView中嵌入一个或多个RecyclerView。这一做法通常会导致如下几个问题  页面滑动卡顿 ScrollView高度显示不正常 RecyclerView内容显示不全  本文将利用多种方式分别解决上述问题 滑动卡顿解决方案若只存在滑动卡顿这一问题，可以采用如下两种简单方式快速解决 利用RecyclerView内部方法12recyclerView.setHasFi">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/img/1.png">
+<meta property="og:updated_time" content="2017-10-11T13:51:12.117Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解决ScrollView嵌套RecyclerView的显示及滑动问题">
+<meta name="twitter:description" content="项目中时常需要实现在ScrollView中嵌入一个或多个RecyclerView。这一做法通常会导致如下几个问题  页面滑动卡顿 ScrollView高度显示不正常 RecyclerView内容显示不全  本文将利用多种方式分别解决上述问题 滑动卡顿解决方案若只存在滑动卡顿这一问题，可以采用如下两种简单方式快速解决 利用RecyclerView内部方法12recyclerView.setHasFi">
+<meta name="twitter:image" content="http://yoursite.com/img/1.png">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/project/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            项目
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#滑动卡顿解决方案"><span class="toc-text">滑动卡顿解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#利用RecyclerView内部方法"><span class="toc-text">利用RecyclerView内部方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重写LayoutManager"><span class="toc-text">重写LayoutManager</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#综合解决方案"><span class="toc-text">综合解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#插入LinearLayout-RelativeLayout"><span class="toc-text">插入LinearLayout/RelativeLayout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重写LayoutManager-1"><span class="toc-text">重写LayoutManager</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重写ScrollView"><span class="toc-text">重写ScrollView</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-【Android】解决ScrollView嵌套RecyclerView导致的显示、高度及滑动卡顿问题" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">解决ScrollView嵌套RecyclerView的显示及滑动问题</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.10</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Yonh Wall</span>
+        </span>
+      
+
+      
+
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>项目中时常需要实现在ScrollView中嵌入一个或多个RecyclerView。这一做法通常会导致如下几个问题</p>
+<ul>
+<li>页面滑动卡顿</li>
+<li>ScrollView高度显示不正常</li>
+<li>RecyclerView内容显示不全</li>
+</ul>
+<p>本文将利用多种方式分别解决上述问题</p>
+<h1 id="滑动卡顿解决方案"><a href="#滑动卡顿解决方案" class="headerlink" title="滑动卡顿解决方案"></a>滑动卡顿解决方案</h1><p>若只存在滑动卡顿这一问题，可以采用如下两种简单方式快速解决</p>
+<h2 id="利用RecyclerView内部方法"><a href="#利用RecyclerView内部方法" class="headerlink" title="利用RecyclerView内部方法"></a>利用RecyclerView内部方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">recyclerView.setHasFixedSize(<span class="keyword">true</span>);</div><div class="line">recyclerView.setNestedScrollingEnabled(<span class="keyword">false</span>);</div></pre></td></tr></table></figure>
+<p>其中，setHasFixedSize(true)方法使得RecyclerView能够固定自身size不受adapter变化的影响；而setNestedScrollingeEnabled(false)方法则是进一步调用了RecyclerView内部NestedScrollingChildHelper对象的setNestedScrollingeEnabled(false)方法，如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNestedScrollingEnabled</span><span class="params">(<span class="keyword">boolean</span> enabled)</span> </span>&#123;</div><div class="line">    getScrollingChildHelper().setNestedScrollingEnabled(enabled);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>进而，NestedScrollingChildHelper对象通过该方法关闭RecyclerView的嵌套滑动特性，如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNestedScrollingEnabled</span><span class="params">(<span class="keyword">boolean</span> enabled)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (mIsNestedScrollingEnabled) &#123;</div><div class="line">        ViewCompat.stopNestedScroll(mView);</div><div class="line">    &#125;</div><div class="line">    mIsNestedScrollingEnabled = enabled;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如此一来，限制了RecyclerView自身的滑动，整个页面滑动仅依靠ScrollView实现，即可解决滑动卡顿的问题</p>
+<h2 id="重写LayoutManager"><a href="#重写LayoutManager" class="headerlink" title="重写LayoutManager"></a>重写LayoutManager</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">LinearLayoutManager linearLayoutManager = <span class="keyword">new</span> LinearLayoutManager(<span class="keyword">this</span>) &#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">canScrollVertically</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这一方式使得RecyclerView的垂直滑动始终返回false，其目的同样是为了限制自身的滑动</p>
+<h1 id="综合解决方案"><a href="#综合解决方案" class="headerlink" title="综合解决方案"></a>综合解决方案</h1><p>若是需要综合解决上述三个问题，则可以采用如下几种方式</p>
+<h2 id="插入LinearLayout-RelativeLayout"><a href="#插入LinearLayout-RelativeLayout" class="headerlink" title="插入LinearLayout/RelativeLayout"></a>插入LinearLayout/RelativeLayout</h2><p>在原有布局中插入一层LinearLayout/RelativeLayout，形成如下布局</p>
+<p><img src="/img/1.png" alt=""></p>
+<h2 id="重写LayoutManager-1"><a href="#重写LayoutManager-1" class="headerlink" title="重写LayoutManager"></a>重写LayoutManager</h2><p>该方法的核心思想在于通过重写LayoutManager中的onMeasure()方法，即</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(RecyclerView.Recycler recycler, RecyclerView.State state, <span class="keyword">int</span> widthSpec, <span class="keyword">int</span> heightSpec)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onMeasure(recycler, state, widthSpec, heightSpec);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>重新实现RecyclerView高度的计算，使得其能够在ScrollView中表现出正确的高度，具体重写方式可参考这篇文章</p>
+<p><a href="http://www.cnblogs.com/tianzhijiexian/p/4469516.html" target="_blank" rel="external">http://www.cnblogs.com/tianzhijiexian/p/4469516.html</a></p>
+<h2 id="重写ScrollView"><a href="#重写ScrollView" class="headerlink" title="重写ScrollView"></a>重写ScrollView</h2><p>该方法的核心思想在于通过重写ScrollView的onInterceptTouchEvent(MotionEvent ev)方法，拦截滑动事件，使得滑动事件能够直接传递给RecyclerView，具体重写方式可参考如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Created by YH on 2017/10/10.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"> </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RecyclerScrollView</span> <span class="keyword">extends</span> <span class="title">ScrollView</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> slop;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> touch;</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RecyclerScrollView</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context);</div><div class="line">        setSlop(context);</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RecyclerScrollView</span><span class="params">(Context context, AttributeSet attrs)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs);</div><div class="line">        setSlop(context);</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RecyclerScrollView</span><span class="params">(Context context, AttributeSet attrs, <span class="keyword">int</span> defStyleAttr)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(context, attrs, defStyleAttr);</div><div class="line">        setSlop(context);</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 是否intercept当前的触摸事件</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> ev 触摸事件</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> true：调用onMotionEvent()方法，并完成滑动操作</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onInterceptTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</div><div class="line">        <span class="keyword">switch</span> (ev.getAction()) &#123;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</div><div class="line">                <span class="comment">//  保存当前touch的纵坐标值</span></div><div class="line">                touch = (<span class="keyword">int</span>) ev.getRawY();</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</div><div class="line">                <span class="comment">//  滑动距离大于slop值时，返回true</span></div><div class="line">                <span class="keyword">if</span> (Math.abs((<span class="keyword">int</span>) ev.getRawY() - touch) &gt; slop) <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        <span class="keyword">return</span> <span class="keyword">super</span>.onInterceptTouchEvent(ev);</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 获取相应context的touch slop值（即在用户滑动之前，能够滑动的以像素为单位的距离）</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> context ScrollView对应的context</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">setSlop</span><span class="params">(Context context)</span> </span>&#123;</div><div class="line">        slop = ViewConfiguration.get(context).getScaledTouchSlop();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>事实上，尽管我们能够采用多种方式解决ScrollView嵌套RecyclerView所产生的一系列问题，但由于上述解决方式均会使得RecyclerView在页面加载过程中一次性显示所有内容，因此当RecyclerView下的条目过多时，将会对影响整个应用的运行效率。基于此，在这种情况下我们应当尽量避免采用ScrollView嵌套RecyclerView的布局方式</p>
+
+    
+  </div>
+</article>
+
+
+   
+
+   
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/project/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              项目
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'YH';
+    
+    var disqus_url = 'http://yoursite.com/2017/10/10/【Android】解决ScrollView嵌套RecyclerView导致的显示、高度及滑动卡顿问题/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//YH.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
