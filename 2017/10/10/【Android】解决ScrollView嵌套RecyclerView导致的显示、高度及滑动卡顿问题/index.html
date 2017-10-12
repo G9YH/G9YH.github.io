@@ -23,7 +23,7 @@
 <meta property="og:description" content="项目中时常需要实现在ScrollView中嵌入一个或多个RecyclerView。这一做法通常会导致如下几个问题  页面滑动卡顿 ScrollView高度显示不正常 RecyclerView内容显示不全  本文将利用多种方式分别解决上述问题 滑动卡顿解决方案若只存在滑动卡顿这一问题，可以采用如下两种简单方式快速解决 利用RecyclerView内部方法12recyclerView.setHasFi">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://yoursite.com/img/1.png">
-<meta property="og:updated_time" content="2017-10-12T02:00:18.193Z">
+<meta property="og:updated_time" content="2017-10-12T06:49:28.661Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决ScrollView嵌套RecyclerView的显示及滑动问题">
 <meta name="twitter:description" content="项目中时常需要实现在ScrollView中嵌入一个或多个RecyclerView。这一做法通常会导致如下几个问题  页面滑动卡顿 ScrollView高度显示不正常 RecyclerView内容显示不全  本文将利用多种方式分别解决上述问题 滑动卡顿解决方案若只存在滑动卡顿这一问题，可以采用如下两种简单方式快速解决 利用RecyclerView内部方法12recyclerView.setHasFi">
@@ -235,7 +235,8 @@
 <p>这一方式使得RecyclerView的垂直滑动始终返回false，其目的同样是为了限制自身的滑动</p>
 <h1 id="综合解决方案"><a href="#综合解决方案" class="headerlink" title="综合解决方案"></a>综合解决方案</h1><p>若是需要综合解决上述三个问题，则可以采用如下几种方式</p>
 <h2 id="插入LinearLayout-RelativeLayout"><a href="#插入LinearLayout-RelativeLayout" class="headerlink" title="插入LinearLayout/RelativeLayout"></a>插入LinearLayout/RelativeLayout</h2><p>在原有布局中插入一层LinearLayout/RelativeLayout，形成如下布局</p>
-<p><img src="/img/1.png" alt=""></p>
+<center><img src="/img/1.png" alt=""></center>
+
 <h2 id="重写LayoutManager-1"><a href="#重写LayoutManager-1" class="headerlink" title="重写LayoutManager"></a>重写LayoutManager</h2><p>该方法的核心思想在于通过重写LayoutManager中的onMeasure()方法，即</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(RecyclerView.Recycler recycler, RecyclerView.State state, <span class="keyword">int</span> widthSpec, <span class="keyword">int</span> heightSpec)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onMeasure(recycler, state, widthSpec, heightSpec);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>重新实现RecyclerView高度的计算，使得其能够在ScrollView中表现出正确的高度，具体重写方式可参考这篇文章</p>
@@ -363,29 +364,6 @@
   
       <div class="fexo-comments comments-post">
     
-  <section class="disqus-comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
-  </section>
-
-  <script>
-    var disqus_shortname = 'YH';
-    
-    var disqus_url = 'http://yoursite.com/2017/10/10/【Android】解决ScrollView嵌套RecyclerView导致的显示、高度及滑动卡顿问题/';
-    
-    (function(){
-      var dsq = document.createElement('script');
-      dsq.type = 'text/javascript';
-      dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-  </script>
-
-  <script id="dsq-count-scr" src="//YH.disqus.com/count.js" async></script>
-
-
 
     
 
