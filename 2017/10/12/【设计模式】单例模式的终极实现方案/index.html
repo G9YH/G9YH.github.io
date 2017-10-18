@@ -7,24 +7,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>设计模式浅析之单例模式 | YH BLOG</title>
+  <title>单例模式的终极实现方案 | YH BLOG</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="YH,G9YH,Java,Android,移动端开发,客户端开发,C#,Unity3D,游戏开发,设计模式" />
+    <meta name="keywords" content="Android,设计模式,Java,线程安全," />
   
 
   <meta name="description" content="单例模式（Singleton）是一种使用率非常高的设计模式，其主要目的在于保证某一类在运行期间仅被创建一个实例，并为该实例提供了一个全局访问方法，通常命名为getInstance()方法。单例模式的本质简言之即是： 控制实例数目  以Java为例，单例模式通常可分为饿汉式和懒汉式两种常规实现方式 饿汉式单例实现饿汉式顾名思义，就是对类实例（食物？）的需求非常强烈，因此，在装载该单例类的时候就会创建">
+<meta name="keywords" content="Android,设计模式,Java,线程安全">
 <meta property="og:type" content="article">
-<meta property="og:title" content="设计模式浅析之单例模式">
-<meta property="og:url" content="http://yoursite.com/2017/10/12/【Android】设计模式浅析之单例模式/index.html">
+<meta property="og:title" content="单例模式的终极实现方案">
+<meta property="og:url" content="http://yoursite.com/2017/10/12/【设计模式】单例模式的终极实现方案/index.html">
 <meta property="og:site_name" content="YH BLOG">
 <meta property="og:description" content="单例模式（Singleton）是一种使用率非常高的设计模式，其主要目的在于保证某一类在运行期间仅被创建一个实例，并为该实例提供了一个全局访问方法，通常命名为getInstance()方法。单例模式的本质简言之即是： 控制实例数目  以Java为例，单例模式通常可分为饿汉式和懒汉式两种常规实现方式 饿汉式单例实现饿汉式顾名思义，就是对类实例（食物？）的需求非常强烈，因此，在装载该单例类的时候就会创建">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2017-10-13T08:42:56.588Z">
+<meta property="og:updated_time" content="2017-10-18T07:43:39.512Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="设计模式浅析之单例模式">
+<meta name="twitter:title" content="单例模式的终极实现方案">
 <meta name="twitter:description" content="单例模式（Singleton）是一种使用率非常高的设计模式，其主要目的在于保证某一类在运行期间仅被创建一个实例，并为该实例提供了一个全局访问方法，通常命名为getInstance()方法。单例模式的本质简言之即是： 控制实例数目  以Java为例，单例模式通常可分为饿汉式和懒汉式两种常规实现方式 饿汉式单例实现饿汉式顾名思义，就是对类实例（食物？）的需求非常强烈，因此，在装载该单例类的时候就会创建">
 
   
@@ -141,17 +142,6 @@
         <li class="item-toolbox">
           <a
             class="CIRCLE"
-            href="/link/"
-            rel="noopener noreferrer"
-            target="_self"
-            >
-            友链
-          </a>
-        </li>
-      
-        <li class="item-toolbox">
-          <a
-            class="CIRCLE"
             href="/project/"
             rel="noopener noreferrer"
             target="_self"
@@ -186,9 +176,9 @@
 
 
 <div class="content content-post CENTER">
-   <article id="post-【Android】设计模式浅析之单例模式" class="article article-type-post" itemprop="blogPost">
+   <article id="post-【设计模式】单例模式的终极实现方案" class="article article-type-post" itemprop="blogPost">
   <header class="article-header">
-    <h1 class="post-title">设计模式浅析之单例模式</h1>
+    <h1 class="post-title">单例模式的终极实现方案</h1>
 
     <div class="article-meta">
       <span>
@@ -204,6 +194,11 @@
       
 
       
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+  </span>
+
 
 
       
@@ -321,17 +316,6 @@
               target="_self"
               >
               关于
-            </a>
-          </li>
-        
-          <li class="item-toolbox">
-            <a
-              class="CIRCLE"
-              href="/link/"
-              rel="noopener noreferrer"
-              target="_self"
-              >
-              友链
             </a>
           </li>
         
