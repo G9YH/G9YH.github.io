@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>单例模式的终极实现方案 | YH BLOG</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="YH,G9YH,Java,Android,移动端开发,客户端开发,C#,Unity3D,游戏开发,设计模式" />
+  
+
+  <meta name="description" content="单例模式（Singleton）是一种使用率非常高的设计模式，其主要目的在于保证某一类在运行期间仅被创建一个实例，并为该实例提供了一个全局访问方法，通常命名为getInstance()方法。单例模式的本质简言之即是： 控制实例数目  以Java为例，单例模式通常可分为饿汉式和懒汉式两种常规实现方式 饿汉式单例实现饿汉式顾名思义，就是对类实例（食物？）的需求非常强烈，因此，在装载该单例类的时候就会创建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单例模式的终极实现方案">
+<meta property="og:url" content="http://yoursite.com/2017/10/12/【Android】单例模式的终极实现方案/index.html">
+<meta property="og:site_name" content="YH BLOG">
+<meta property="og:description" content="单例模式（Singleton）是一种使用率非常高的设计模式，其主要目的在于保证某一类在运行期间仅被创建一个实例，并为该实例提供了一个全局访问方法，通常命名为getInstance()方法。单例模式的本质简言之即是： 控制实例数目  以Java为例，单例模式通常可分为饿汉式和懒汉式两种常规实现方式 饿汉式单例实现饿汉式顾名思义，就是对类实例（食物？）的需求非常强烈，因此，在装载该单例类的时候就会创建">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2017-10-18T06:57:27.798Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="单例模式的终极实现方案">
+<meta name="twitter:description" content="单例模式（Singleton）是一种使用率非常高的设计模式，其主要目的在于保证某一类在运行期间仅被创建一个实例，并为该实例提供了一个全局访问方法，通常命名为getInstance()方法。单例模式的本质简言之即是： 控制实例数目  以Java为例，单例模式通常可分为饿汉式和懒汉式两种常规实现方式 饿汉式单例实现饿汉式顾名思义，就是对类实例（食物？）的需求非常强烈，因此，在装载该单例类的时候就会创建">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/project/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            项目
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#饿汉式单例实现"><span class="toc-text">饿汉式单例实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#懒汉式单例实现"><span class="toc-text">懒汉式单例实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#线程安全的懒汉式单例实现"><span class="toc-text">线程安全的懒汉式单例实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#添加synchronized关键词"><span class="toc-text">添加synchronized关键词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用双重检查加锁机制"><span class="toc-text">利用双重检查加锁机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#利用Java缓存思想实现的单例实现"><span class="toc-text">利用Java缓存思想实现的单例实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单例模式的最佳实现"><span class="toc-text">单例模式的最佳实现</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-【Android】单例模式的终极实现方案" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">单例模式的终极实现方案</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.12</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Yonh Wall</span>
+        </span>
+      
+
+      
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>单例模式（Singleton）是一种使用率非常高的设计模式，其主要目的在于保证某一类在运行期间仅被创建一个实例，并为该实例提供了一个全局访问方法，通常命名为getInstance()方法。单例模式的本质简言之即是：</p>
+<center><strong>控制实例数目</strong></center>
+
+<p>以Java为例，单例模式通常可分为<strong>饿汉式</strong>和<strong>懒汉式</strong>两种常规实现方式</p>
+<h1 id="饿汉式单例实现"><a href="#饿汉式单例实现" class="headerlink" title="饿汉式单例实现"></a>饿汉式单例实现</h1><p>饿汉式顾名思义，就是对类实例（食物？）的需求非常强烈，因此，在装载该单例类的时候就会创建类实例。如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 装载时即创建类实例，并保存在类变量instance中</span></div><div class="line"><span class="comment">     * 加上static关键词使得该变量能在getInstance()静态方法中使用</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 私有化构造方法，使外部无法通过构造方法构造除instance外的类实例</span></div><div class="line"><span class="comment">     * 从而达到单例模式控制类实例数目的目的</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 类实例的全局访问方法</span></div><div class="line"><span class="comment">     * 加上static关键词使得外部可以通过类名直接调用该方法获取类实例</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> 单例类实例</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//  由于类实例在类装载时已被创建并保存在instance中，因此可直接返回</span></div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>事实上，在Android开发中，Android Studio提供了一个直接创建单例类的功能（File-&gt;new-&gt;Singleton），该功能自动生成的单例类正是采用了饿汉式的实现方式</p>
+<h1 id="懒汉式单例实现"><a href="#懒汉式单例实现" class="headerlink" title="懒汉式单例实现"></a>懒汉式单例实现</h1><p>说到懒，我们自然而然会想到拖延症这一恶习，这一点和懒汉式的单例实现方式相似，这一实现方式会一直等到真正需要使用对象实例的时候再去创建该实例。如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 装载时不创建类实例，但需要利用一个类变量去保存后续创建的类实例</span></div><div class="line"><span class="comment">     * 添加static关键词使得该变量能在getInstance()静态方法中使用</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 私有化构造方法，使外部无法通过构造方法构造除instance外的类实例</span></div><div class="line"><span class="comment">     * 从而达到单例模式控制类实例数目的目的</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 类实例的全局访问方法</span></div><div class="line"><span class="comment">     * 添加static关键词使得外部可以通过类名直接调用该方法获取类实例</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> 单例类实例</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//  如果instance未被初始化，则初始化该类实例</span></div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            instance = <span class="keyword">new</span> Singleton();</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>事实上，虽然我们前面拿拖延症来与懒汉式做类比，但懒汉式的拖延却是实际开发中的一种较为常见的节省资源的方式，即<strong>延迟加载</strong>思想。这一思想的核心在于直到需要使用某些资源或数据时再去加载该资源或获取该数据，这样可以尽可能地节省使用前的内存空间</p>
+<h1 id="线程安全的懒汉式单例实现"><a href="#线程安全的懒汉式单例实现" class="headerlink" title="线程安全的懒汉式单例实现"></a>线程安全的懒汉式单例实现</h1><p>不难分析出，当外部多个线程同时想要获取单例类实例时，上述懒汉式实现方式便很容易导致并发问题。通常有如下几种改进方式</p>
+<h2 id="添加synchronized关键词"><a href="#添加synchronized关键词" class="headerlink" title="添加synchronized关键词"></a>添加synchronized关键词</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">....</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">....</div></pre></td></tr></table></figure>
+<p>这种改进方式是最简单的，但由于外部每次调用getInstance()方法时均需进行判断，因此该方式也是效率较低的</p>
+<h2 id="利用双重检查加锁机制"><a href="#利用双重检查加锁机制" class="headerlink" title="利用双重检查加锁机制"></a>利用双重检查加锁机制</h2><p>双重检查加锁机制分为如下两重检查</p>
+<ul>
+<li>在程序每次调用getInstance()方法时先不进行同步，而是在进入该方法后再去检查类实例是否存在，若不存在则进入接下来的同步代码块</li>
+<li>进入同步代码块后将再次检查类实例是否存在，若不存在则创建一个新的实例</li>
+</ul>
+<p>这样一来，就只需要在类实例初始化时进行一次同步判断即可，而非每次调用getInstance()方法时都进行同步判断，大大节省了时间，具体实现如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 装载时不创建类实例，但需要利用一个类变量去保存后续创建的类实例</span></div><div class="line"><span class="comment">     * 添加volatile关键词使其不会被本地线程缓存，保证线程能正确处理</span></div><div class="line"><span class="comment">     * 添加static关键词使得该变量能在getInstance()静态方法中使用</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 私有化构造方法，使外部无法通过构造方法构造除instance外的类实例</span></div><div class="line"><span class="comment">     * 从而达到单例模式控制类实例数目的目的</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 类实例的全局访问方法</span></div><div class="line"><span class="comment">     * 添加static关键词使得外部可以通过类名直接调用该方法获取类实例</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> 单例类实例</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//  第一重检查：如果instance未被初始化，则进入同步代码块</span></div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="comment">//  同步代码块，保证线程安全</span></div><div class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</div><div class="line">                <span class="comment">//  第二重检查：如果instance未被初始化，则初始化该类实例</span></div><div class="line">                <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">                    instance = <span class="keyword">new</span> Singleton();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="利用Java缓存思想实现的单例实现"><a href="#利用Java缓存思想实现的单例实现" class="headerlink" title="利用Java缓存思想实现的单例实现"></a>利用Java缓存思想实现的单例实现</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="comment">//  类实例缓存KEY值</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String KEY = <span class="string">"CACHE"</span>;</div><div class="line"> </div><div class="line">    <span class="comment">//  类实例缓存容器</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, Singleton&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 私有化构造方法，使外部无法通过构造方法构造除instance外的类实例</span></div><div class="line"><span class="comment">     * 从而达到单例模式控制类实例数目的目的</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 类实例的全局访问方法</span></div><div class="line"><span class="comment">     * 添加static关键词使得外部可以通过类名直接调用该方法获取类实例</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> 单例类实例</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//  尝试从缓存容器中获取类实例</span></div><div class="line">        Singleton instance = map.get(KEY);</div><div class="line">        <span class="comment">//  未能获取类实例，则初始化该实例，并将其缓存至容器中</span></div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            instance = <span class="keyword">new</span> Singleton();</div><div class="line">            map.put(KEY, instance);</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上述实现方式暂未考虑线程安全问题。事实上，利用缓存来实现的单例模式其最大的优点在于对单例模式进行扩展。我们自然而然地可以想到这么一种情况，既然在实际开发中经常需要保证某个类只能被创建一个实例，那么，会不会出现保证某个类只能被创建两个或多个实例这种需求呢？对于这项需求，我们首先可以想到，上述实现方式中所建立的缓存容器是可以存储多个类实例的，利用这一特点，只需考虑一个问题，即外部调用时到底需要为其返回哪一个实例，便可实现<strong>“双例模式”</strong>以及<strong>“多例模式”</strong>（原谅我为它们取了一些奇怪的名字）了，具体实现如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="comment">//  可创建的最大类实例数，这里以“双例模式”为例</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX = <span class="number">2</span>;</div><div class="line"> </div><div class="line">    <span class="comment">//  类实例缓存KEY值</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String KEY = <span class="string">"CACHE"</span>;</div><div class="line"> </div><div class="line">    <span class="comment">//  当前正在使用的实例序号</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> index = <span class="number">1</span>;</div><div class="line"> </div><div class="line">    <span class="comment">//  类实例缓存容器</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;String, Singleton&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 私有化构造方法，使外部无法通过构造方法构造除instance外的类实例</span></div><div class="line"><span class="comment">     * 从而达到单例模式控制类实例数目的目的</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 类实例的全局访问方法</span></div><div class="line"><span class="comment">     * 添加static关键词使得外部可以通过类名直接调用该方法获取类实例</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> 单例类实例</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//  尝试从缓存容器中获取第index个类实例</span></div><div class="line">        String key = KEY + index;</div><div class="line">        Singleton instance = map.get(key);</div><div class="line">        <span class="comment">//  未能获取类实例，则初始化该实例，并将其缓存至容器相应index中</span></div><div class="line">        <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</div><div class="line">            instance = <span class="keyword">new</span> Singleton();</div><div class="line">            map.put(key, instance);</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        <span class="comment">//  这里以最基本的顺序调用为例，其他复杂调度方式不加讨论，具体调用方式如下</span></div><div class="line">        <span class="comment">//  index++，以在下一次调用中获取下一个类实例，当达到类实例数上限时，重新获取第一个类实例</span></div><div class="line">        <span class="keyword">if</span> ((++index) &gt; MAX) &#123;</div><div class="line">            index = <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line"> </div><div class="line">        <span class="keyword">return</span> instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="单例模式的最佳实现"><a href="#单例模式的最佳实现" class="headerlink" title="单例模式的最佳实现"></a>单例模式的最佳实现</h1><p>综合而言，上述实现方式都或多或少地存在诸如线程不安全、无法做到延迟加载等小缺陷。这里给出一个可以称得上完美的最佳解决方案</p>
+<center><strong>Lazy Initialization Holder Class 模式</strong></center>
+
+<p>这一方案的核心在于Java的<strong>类级内部类</strong>（即使用static关键词修饰的内部类，否则称之为对象级内部类）以及<strong>多线程缺省同步锁</strong>，先来看看具体实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 类级内部类，用于缓存类实例</span></div><div class="line"><span class="comment">     * 该类将在被调用时才会被装载，从而实现了延迟加载</span></div><div class="line"><span class="comment">     * 同时由于instance采用静态初始化的方式，因此JVM能保证其线程安全性</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Instance</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 私有化构造方法，使外部无法通过构造方法构造除instance外的类实例</span></div><div class="line"><span class="comment">     * 从而达到单例模式控制类实例数目的目的</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 类实例的全局访问方法</span></div><div class="line"><span class="comment">     * 添加static关键词使得外部可以通过类名直接调用该方法获取类实例</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> 单例类实例</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> Instance.instance;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在前面提到的饿汉式实现方式中，我们利用Java的静态初始化、借由JVM实现了线程安全，因此这里同样采用了这种方式。而另一方面，为了避免饿汉式实现中无法进行延迟加载的缺陷，我们构造了一个类级内部类来缓存类实例，由于该类只会在通过getInstance()方法去调用时才会被系统装载，换言之，只有初次调用getInstance()方法时才会去初始化类实例，因此也实现了延迟加载这一功能。如此便可使得这一实现方式能够同时具备线程安全、延迟加载以及节省大量同步判断资源等优势，可以说是单例模式的最佳实现了</p>
+
+    
+  </div>
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+  <span id="busuanzi_container_page_pv" style="line-height: 50px; font-size: 16px; display: block;">
+    本文总阅读量：<span id="busuanzi_value_page_pv"></span>次
+  </span>
+</article>
+
+   
+
+   
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/project/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              项目
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
