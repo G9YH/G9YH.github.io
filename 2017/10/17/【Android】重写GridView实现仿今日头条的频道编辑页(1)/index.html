@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head>
+  <meta charset="utf-8">
+  
+  <title>重写GridView实现仿今日头条的频道编辑页(1) | YH BLOG</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Android,自定控件," />
+  
+
+  <meta name="description" content="本文旨在通过重写GridView，配合系统弹窗实现仿今日头条的频道编辑页面。 注：由于代码稍长，本文仅列出关键部分，完整工程请参见【https://github.com/G9YH/YHChannelEdit】 在开始讲解盗版的实现方案前，让我们先来看看正版与盗版的实际使用效果对比，首先是正版   接下来是盗版   当然，在部分视图的设计方面还是存在着不小的差异的，但这一页面大部分基本功能已然实现了">
+<meta name="keywords" content="Android,自定控件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重写GridView实现仿今日头条的频道编辑页(1)">
+<meta property="og:url" content="http://yoursite.com/2017/10/17/【Android】重写GridView实现仿今日头条的频道编辑页(1)/index.html">
+<meta property="og:site_name" content="YH BLOG">
+<meta property="og:description" content="本文旨在通过重写GridView，配合系统弹窗实现仿今日头条的频道编辑页面。 注：由于代码稍长，本文仅列出关键部分，完整工程请参见【https://github.com/G9YH/YHChannelEdit】 在开始讲解盗版的实现方案前，让我们先来看看正版与盗版的实际使用效果对比，首先是正版   接下来是盗版   当然，在部分视图的设计方面还是存在着不小的差异的，但这一页面大部分基本功能已然实现了">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://yoursite.com/img/2.gif">
+<meta property="og:image" content="http://yoursite.com/img/3.gif">
+<meta property="og:updated_time" content="2017-10-19T03:14:23.709Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="重写GridView实现仿今日头条的频道编辑页(1)">
+<meta name="twitter:description" content="本文旨在通过重写GridView，配合系统弹窗实现仿今日头条的频道编辑页面。 注：由于代码稍长，本文仅列出关键部分，完整工程请参见【https://github.com/G9YH/YHChannelEdit】 在开始讲解盗版的实现方案前，让我们先来看看正版与盗版的实际使用效果对比，首先是正版   接下来是盗版   当然，在部分视图的设计方面还是存在着不小的差异的，但这一页面大部分基本功能已然实现了">
+<meta name="twitter:image" content="http://yoursite.com/img/2.gif">
+
+  
+
+  
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/personal-style.css">
+  
+
+  
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+
+  
+</head>
+
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">导航</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">导航</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/project/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            项目
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#实现思想"><span class="toc-text">实现思想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实现要点"><span class="toc-text">实现要点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#我的频道"><span class="toc-text">我的频道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#频道推荐"><span class="toc-text">频道推荐</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#列表缓存"><span class="toc-text">列表缓存</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#优化改进"><span class="toc-text">优化改进</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-【Android】重写GridView实现仿今日头条的频道编辑页(1)" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">重写GridView实现仿今日头条的频道编辑页(1)</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.10.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Yonh Wall</span>
+        </span>
+      
+
+      
+  <span class="article-category">
+    <i class="icon-list"></i>
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </span>
+
+
+
+      
+
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文旨在通过<strong>重写GridView</strong>，配合<strong>系统弹窗</strong>实现仿今日头条的频道编辑页面。</p>
+<p>注：由于代码稍长，本文仅列出关键部分，完整工程请参见【<a href="https://github.com/G9YH/YHChannelEdit" target="_blank" rel="external">https://github.com/G9YH/YHChannelEdit</a>】</p>
+<p>在开始讲解盗版的实现方案前，让我们先来看看正版与盗版的实际使用效果对比，首先是正版</p>
+<center><img src="/img/2.gif" alt=""></center>
+
+<p>接下来是盗版</p>
+<center><img src="/img/3.gif" alt=""></center>
+
+<p>当然，在部分视图的设计方面还是存在着不小的差异的，但这一页面大部分基本功能已然实现了。那么接下来，就让我们开始我们的模仿秀</p>
+<h1 id="实现思想"><a href="#实现思想" class="headerlink" title="实现思想"></a>实现思想</h1><p>事实上，我的频道列表中，如何实现长按拖拽并交换频道位置是整个页面的核心难点。大致实现思路如下</p>
+<ul>
+<li>长按某个频道后，在该频道上方生成一个与之相同的弹窗，同时隐藏该频道视图</li>
+<li>当手指按下时，该弹窗跟随触摸点移动</li>
+<li>弹窗移动过程中，根据触摸点交换其他频道位置</li>
+<li>当手指抬起时，在触摸点当前对应的位置处生成一个与弹窗相同的频道视图</li>
+</ul>
+<p>抛开这一问题，其余部分的实现逻辑都较为简单，这里不再赘述，下文将更会有具体实现的介绍</p>
+<h1 id="实现要点"><a href="#实现要点" class="headerlink" title="实现要点"></a>实现要点</h1><h2 id="我的频道"><a href="#我的频道" class="headerlink" title="我的频道"></a>我的频道</h2><p>正如前文所言，这一部分的核心在于<strong>重写GridView</strong>以及<strong>系统弹窗</strong>，那么，首先自然是系统弹窗权限的开启</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;uses-permission android:name=<span class="string">"android.permission.SYSTEM_ALERT_WINDOW"</span> /&gt;</div></pre></td></tr></table></figure>
+<p>接下来即是GridView的重写。首先定义了两个常量用户标识当前的模式，即编辑模式和普通模式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_EDIT = <span class="number">1</span>;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MODE_NORMAL = <span class="number">2</span>;</div></pre></td></tr></table></figure>
+<p>然后实现了OnItemLongClickListener接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onItemLongClick</span><span class="params">(AdapterView&lt;?&gt; adapterView, View view, <span class="keyword">int</span> i, <span class="keyword">long</span> l)</span> </span>&#123;</div><div class="line">    <span class="comment">//  已处于移动模式</span></div><div class="line">    <span class="keyword">if</span> (mode == MODE_EDIT) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    textEdit.setText(<span class="string">"完成"</span>);</div><div class="line"> </div><div class="line">    ....</div><div class="line"> </div><div class="line">    <span class="comment">//  推荐标签无法移动或删除</span></div><div class="line">    <span class="keyword">if</span> (i == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="comment">//  判断并获取弹窗权限</span></div><div class="line">    permissionGetter.alertWindowPermissionRequest();</div><div class="line"> </div><div class="line">    ....</div><div class="line"> </div><div class="line">    <span class="comment">//  初始化弹窗</span></div><div class="line">    initWindow();</div><div class="line"> </div><div class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里需要注意到的是PermissionGetter类，我们知道，尽管在manifests中定义了系统弹窗的权限，但通常而言手机是需要用户手动为app开启相关权限的。PermissionGetter类的作用即在于此，该类通过分别处理小米、魅族以及华为等几个较为特殊的Android系统，基本实现了大部分机型的弹窗权限申请功能</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 判断系统是否已为应用开启某项权限</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> num 权限编号</span></div><div class="line"><span class="comment"> * <span class="doctag">@return</span> 已开启则返回0，否则返回1</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">checkPermission</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> version = Build.VERSION.SDK_INT;</div><div class="line">    <span class="keyword">if</span> (version &gt;= <span class="number">19</span>) &#123;</div><div class="line">        ....</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"> </div><div class="line">....</div><div class="line"> </div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Android 6.0之后的手机需要进行弹窗权限的申请</span></div><div class="line"><span class="comment"> * 其中小米、魅族以及华为三种机型需要特殊处理</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">alertWindowPermission</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.checkPermission(<span class="number">24</span>) == <span class="number">1</span>) &#123;</div><div class="line">        Toast toast = Toast.makeText(</div><div class="line">                context, <span class="string">"请先为您的手机开启悬浮窗权限"</span>, Toast.LENGTH_SHORT);</div><div class="line">        toast.show();</div><div class="line">        <span class="comment">//  处理小米手机权限</span></div><div class="line">        <span class="keyword">if</span> (<span class="string">"Xiaomi"</span>.equals(Build.MANUFACTURER)) &#123;</div><div class="line">            ....</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//  处理魅族手机权限</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"Meizu"</span>.equals(Build.MANUFACTURER)) &#123;</div><div class="line">            ....</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//  处理华为手机权限</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"Huawei"</span>.equals(Build.MANUFACTURER)) &#123;</div><div class="line">            ....</div><div class="line">        &#125;</div><div class="line">        <span class="comment">//  处理其他手机权限</span></div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="number">23</span>) &#123;</div><div class="line">            ....</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在长按接口中实现了弹窗的初始化后，将模式mode设置为MODE_EDIT。此时即可通过重写onTouchEvent(MovtionEvent motionEvent)方法来判断何时进行弹窗的更新以及关闭等工作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouchEvent</span><span class="params">(MotionEvent motionEvent)</span> </span>&#123;</div><div class="line">    <span class="keyword">switch</span> (motionEvent.getAction()) &#123;</div><div class="line">        <span class="keyword">case</span> MotionEvent.ACTION_DOWN:</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</div><div class="line">            <span class="keyword">if</span> (mode == MODE_EDIT) &#123;</div><div class="line">                updateWindow(motionEvent);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">        <span class="keyword">case</span> MotionEvent.ACTION_UP:</div><div class="line">            <span class="keyword">if</span> (mode == MODE_EDIT) &#123;</div><div class="line">                closeWindow();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onTouchEvent(motionEvent);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当手指按下时，持续更新弹窗位置，并根据其位置交换其他频道的位置，当然不要忘记了交换动作相应的动画</p>
+<p>当手指抬起时，将模式mode设置为MODE_NORMAL，并在弹窗当前对应的频道处生成一个与弹窗相同的视图，同时移除该弹窗视图即可</p>
+<h2 id="频道推荐"><a href="#频道推荐" class="headerlink" title="频道推荐"></a>频道推荐</h2><p>这一部分的实现就较为简单了，只需利用GridView展示频道，然后实现OnItemClickListener接口，点击时将该item移除并添加至我的频道视图中即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@OnItemClick</span>(R.id.grid_recommend) <span class="function"><span class="keyword">void</span> <span class="title">gridRecommend</span><span class="params">(<span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">    String string = listHolder.getRecommendList().get(position);</div><div class="line">    <span class="comment">//  我的频道中增加标签</span></div><div class="line">    listHolder.getMineList().add(string);</div><div class="line">    <span class="comment">//  频道推荐中删除标签</span></div><div class="line">    listHolder.getRecommendList().remove(position);</div><div class="line"> </div><div class="line">    <span class="comment">//  更新各频道数据</span></div><div class="line">    mineAdapter.moveNotifyDataSetChanged(<span class="keyword">false</span>, -<span class="number">1</span>);</div><div class="line">    recommendAdapter.notifyDataSetChanged();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="列表缓存"><a href="#列表缓存" class="headerlink" title="列表缓存"></a>列表缓存</h2><p>事实上，在实际开发中，通常可以采用SharedPreferences配合服务器端来实现我的频道以及频道推荐两个列表内容的持久化存储。但由于这里仅仅是实现一个demo，因此存储功能仅通过一个单例类ListHolder来模拟实现。其中ListHolder单例的实现方式如下，参考了我之前的一篇博客<a href="https://g9yh.github.io/2017/10/12/%E3%80%90%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E3%80%91%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%9A%84%E7%BB%88%E6%9E%81%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88/" target="_blank" rel="external">《单例模式的终极实现方案》</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ListHolder</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> List&lt;String&gt; mineList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">    <span class="keyword">private</span> List&lt;String&gt; recommendList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line"> </div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Instance</span> </span>&#123;</div><div class="line">        <span class="keyword">private</span> <span class="keyword">static</span> ListHolder instance = <span class="keyword">new</span> ListHolder();</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ListHolder</span><span class="params">()</span> </span>&#123;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ListHolder <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> Instance.instance;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">get</span><span class="params">()</span> &amp; <span class="title">set</span><span class="params">()</span></span></div><div class="line"><span class="function">&#125;</span></div></pre></td></tr></table></figure>
+<h1 id="优化改进"><a href="#优化改进" class="headerlink" title="优化改进"></a>优化改进</h1><p>尽管到目前为止，我们已经实现了大部分的基本功能，但仍与正版有部分差异，例如频道列表内容的存储、部分动画的实现以及视图设计的差别等等，这一系列问题都将在之后的开发工作中继续优化</p>
+
+    
+  </div>
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+  </script>
+
+  <span id="busuanzi_container_page_pv" style="line-height: 50px; font-size: 16px; display: block;">
+    本文总阅读量：<span id="busuanzi_value_page_pv"></span>次
+  </span>
+</article>
+
+   
+
+   
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">Close</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/project/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              项目
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
